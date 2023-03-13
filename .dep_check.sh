@@ -30,8 +30,9 @@ export DL_URL_PKGMGRFIX=https://github.com/Hafizat/pkgmgr-fix
 # sets a link to fetch the function files
 export FUNC_DL_URL_PKGMGRFIX=$DL_URL_PKGMGRFIX/func_call
 
+# looks for any available package manager and downloads the necessary file afterwards
 if [ -a $PATH/apt ]; then
-    echo "Detected package manager: APT"
+    echo "Detected package manager: APT Ubuntu-based system"
     echo "DPKG will be included. Please use the -dpkg to troubleshoot it."
     if [ $DL_PKGMGRFIX = git ]; then
         git clone $FUNC_DL_URL_PKGMGRFIX/apt_func.sh
@@ -41,7 +42,7 @@ if [ -a $PATH/apt ]; then
         wget $FUNC_DL_URL_PKGMGRFIX/dpkg_func.sh
     fi
 elif [ -a $PATH/apt-get ]; then
-    echo "Detected package manager: APT-GET"
+    echo "Detected package manager: APT-GET Debian-based systems"
     echo "DPKG will be available to troubleshoot via executing it with -dpkg"
     if [ $DL_PKGMGRFIX = git ]; then
         git clone $FUNC_DL_URL_PKGMGRFIX/apt-get_func.sh
@@ -69,62 +70,11 @@ elif [ -a $PATH/pacman ]; then
         git clone $FUNC_DL_URL_PKGMGRFIX/pacman_func.sh
     elif [ $DL_PKGMGRFIX = wget ]; then
         wget $FUNC_DL_URL_PKGMGRFIX/pacman_func.sh
+    fi
     read -p 'Include AUR helpers? y/n' AURASK
-    if [ $AURASK = y ]; then
-        # readies the var for aur helper url
-        export $AUR_FUNC_DL_URL_PKGMGRFIX=$DL_URL_PKGMGRFIX/pacaur_func
-        if [ -a $PATH/auracle ]; then
-
-        fi
-        if [ -a $PATH/pbget ]; then
-
-        fi
-        if [ -a $PATH/repoctl ]; then
-
-        fi
-        if [ -a $PATH/yaah ]; then
-
-        fi
-        if [ -a $PATH/aurutils ]; then
-
-        fi
-        if [ -a $PATH/bauerbill ]; then
-
-        fi
-        if [ -a $PATH/pkgbuilder ]; then
-
-        fi
-        if [ -a $PATH/rua ]; then
-
-        fi
-        if [ -a $PATH/aura ]; then
-
-        fi
-        if [ -a $PATH/pacaur ]; then
-
-        fi
-        if [ -a $PATH/pakku ]; then
-
-        fi
-        if [ -a $PATH/paru ]; then
-
-        fi
-        if [ -a $PATH/pikaur ]; then
-
-        fi
-        if [ -a $PATH/trizen ]; then
-
-        fi
-        if [ -a $PATH/yay ]; then
-
-        fi
-        if [ i = 0 ]; then
-            echo "No AUR helpers installed. Refer to https://wiki.archlinux.org/title/AUR_helpers for list of helpers to install one."
-        else
-            echo "$i AUR helpers found."
-        fi
-    elif [ $AURASK = n ]; then
-        exit
+    # grabs function from a file and calls it
+    source /usr/share/pkgmgr-fix/aurscan.sh
+    scan_aur
     fi
 
     
